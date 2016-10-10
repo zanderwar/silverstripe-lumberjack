@@ -40,10 +40,7 @@ class Lumberjack extends SiteTreeExtension
     {
         $excluded = $this->owner->getExcludedSiteTreeClassNames();
         if (!empty($excluded)) {
-            $pages = SiteTree::get()->filter(array(
-                'ParentID' => $this->owner->ID,
-                'ClassName' => $excluded
-            ));
+            $pages = $this->getLumberjackPagesForGridfield($excluded);
             $gridField = new GridField(
                 "ChildPages",
                 $this->getLumberjackTitle(),
@@ -153,5 +150,26 @@ class Lumberjack extends SiteTreeExtension
         $controller = Controller::curr();
         return $controller instanceof LeftAndMain
             && in_array($controller->getAction(), array("treeview", "listview", "getsubtree"));
+    }
+
+
+    /**
+     * Returns list of pages for the CMS gridfield
+     *
+     * This also allows the owner class to override this method, e.g. to provide custom ordering.
+     *
+     * @var array $excluded     List of class names excluded from the SiteTree
+     * @return DataList
+     */
+    public function getLumberjackPagesForGridfield($excluded = array())
+    {
+        if (method_exists($this->owner, 'getLumberjackPagesForGridfield')) {
+            return $this->owner->getLumberjackPagesForGridfield($excluded);
+        }
+
+        return SiteTree::get()->filter(array(
+            'ParentID' => $this->owner->ID,
+            'ClassName' => $excluded,
+        ));
     }
 }
