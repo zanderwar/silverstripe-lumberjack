@@ -3,7 +3,7 @@ fa_IR:
     Add: 'افزودن {name} جدید'
     AddMultipleOptions: 'افزودن جدید'
   GridFieldSiteTreeState:
-    Modified: اصلاح شده
+    Modified: 'اصلاح شده'
     StateTitle: وضیعت
   Lumberjack:
     TabTitle: 'صفحات زیرین'

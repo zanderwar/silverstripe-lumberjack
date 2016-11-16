@@ -8,4 +8,4 @@ fi:
     Published: '<i class="btn-icon gridfield-icon btn-icon-accept"></i> Julkaistu {date}'
     StateTitle: Tila
   Lumberjack:
-    TabTitle: 'Alasivut'
+    TabTitle: Alasivut
