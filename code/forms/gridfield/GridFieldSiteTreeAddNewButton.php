@@ -1,5 +1,22 @@
 <?php
 
+namespace SilverStripe\Lumberjack\Forms;
+
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
+
 /**
  * This component creates a dropdown of possible page types and a button to create a new page.
  *
@@ -10,10 +27,8 @@
  *
  * @author Michael Strong <mstrong@silverstripe.org>
  */
-class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton
-    implements GridField_ActionProvider
+class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements GridField_ActionProvider
 {
-
     /**
      * Determine the list of classnames and titles allowed for a given parent object
      *
@@ -30,7 +45,7 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton
         $allowedChildren = $parent->allowedChildren();
         $children = array();
         foreach ($allowedChildren as $class) {
-            if (Config::inst()->get($class, "show_in_sitetree") === false) {
+            if (Config::inst()->get($class, 'show_in_sitetree') === false) {
                 $instance = Injector::inst()->get($class);
                 // Note: Second argument to SiteTree::canCreate will support inherited permissions
                 // post 3.1.12, and will default to the old permission model in 3.1.11 or below
@@ -57,13 +72,19 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton
         if (empty($children)) {
             return array();
         } elseif (count($children) > 1) {
-            $pageTypes = DropdownField::create("PageType", "Page Type", $children, $parent->defaultChild());
-            $pageTypes->setFieldHolderTemplate("GridFieldSiteTreeAddNewButton_holder")->addExtraClass("gridfield-dropdown no-change-track");
+            $pageTypes = DropdownField::create('PageType', 'Page Type', $children, $parent->defaultChild());
+            $pageTypes
+                ->setFieldHolderTemplate('GridFieldSiteTreeAddNewButton_holder')
+                ->addExtraClass('gridfield-dropdown no-change-track');
 
             $state->pageType = $parent->defaultChild();
 
             if (!$this->buttonName) {
-                $this->buttonName = _t('GridFieldSiteTreeAddNewButton.AddMultipleOptions', 'Add new', "Add button text for multiple options.");
+                $this->buttonName = _t(
+                    'GridFieldSiteTreeAddNewButton.AddMultipleOptions',
+                    'Add new',
+                    'Add button text for multiple options.'
+                );
             }
         } else {
             $keys = array_keys($children);
@@ -72,38 +93,45 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton
             $state->pageType = $keys[0];
 
             if (!$this->buttonName) {
-                $this->buttonName = _t('GridFieldSiteTreeAddNewButton.Add', 'Add new {name}', 'Add button text for a single option.', array($children[$keys[0]]));
+                $this->buttonName = _t(
+                    'GridFieldSiteTreeAddNewButton.Add',
+                    'Add new {name}',
+                    'Add button text for a single option.',
+                    array($children[$keys[0]])
+                );
             }
         }
 
-        $addAction = new GridField_FormAction($gridField, 'add', $this->buttonName, 'add', 'add');
-        $addAction->setAttribute('data-icon', 'add')->addExtraClass("no-ajax ss-ui-action-constructive dropdown-action");
+        $addAction = GridField_FormAction::create($gridField, 'add', $this->buttonName, 'add', 'add');
+        $addAction
+            ->setAttribute('data-icon', 'add')
+            ->addExtraClass("no-ajax ss-ui-action-constructive dropdown-action");
 
-        $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new ArrayList();
+        $forTemplate = ArrayData::create([]);
+        $forTemplate->Fields = ArrayList::create();
         $forTemplate->Fields->push($pageTypes);
         $forTemplate->Fields->push($addAction);
 
         Requirements::css(LUMBERJACK_DIR . "/css/lumberjack.css");
         Requirements::javascript(LUMBERJACK_DIR . "/javascript/GridField.js");
 
-        return array($this->targetFragment => $forTemplate->renderWith("GridFieldSiteTreeAddNewButton"));
+        return array(
+            $this->targetFragment => $forTemplate->renderWith(
+                'SilverStripe\\Lumberjack\\Forms\\GridFieldSiteTreeAddNewButton'
+            )
+        );
     }
-
-
 
     /**
      * Provide actions to this component.
      *
-     * @param GridField $gridField
+     * @param  GridField $gridField
      * @return array
     **/
     public function getActions($gridField)
     {
-        return array("add");
+        return array('add');
     }
-
-
 
     /**
      * Handles the add action, but only acts as a wrapper for {@link CMSPageAddController::doAdd()}
@@ -115,16 +143,16 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton
     **/
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == "add") {
+        if ($actionName == 'add') {
             $tmpData = json_decode($data['ChildPages']['GridState'], true);
-            $tmpData = $tmpData['GridFieldSiteTreeAddNewButton'];
+            $tmpData = $tmpData['SilverStripe\\Lumberjack\\Forms\\GridFieldSiteTreeAddNewButton'];
 
             $data = array(
-                "ParentID" => $tmpData['currentPageID'],
-                "PageType" => $tmpData['pageType']
+                'ParentID' => $tmpData['currentPageID'],
+                'PageType' => $tmpData['pageType']
             );
 
-            $controller = Injector::inst()->create("CMSPageAddController");
+            $controller = Injector::inst()->create('CMSPageAddController');
 
             $form = $controller->AddForm();
             $form->loadDataFrom($data);

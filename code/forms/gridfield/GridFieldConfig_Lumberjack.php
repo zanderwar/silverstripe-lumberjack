@@ -1,5 +1,19 @@
 <?php
 
+namespace SilverStripe\Lumberjack\Forms;
+
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeAddNewButton;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeEditButton;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeState;
+
 /**
  * GridField config necessary for managing a SiteTree object.
  *
@@ -10,20 +24,23 @@
  **/
 class GridFieldConfig_Lumberjack extends GridFieldConfig
 {
-
+    /**
+     * @param int|null $itemsPerPage
+     */
     public function __construct($itemsPerPage = null)
     {
         parent::__construct($itemsPerPage);
-        $this->addComponent(new GridFieldButtonRow('before'));
-        $this->addComponent(new GridFieldSiteTreeAddNewButton('buttons-before-left'));
-        $this->addComponent(new GridFieldToolbarHeader());
-        $this->addComponent(new GridFieldSortableHeader());
-        $this->addComponent(new GridFieldFilterHeader());
-        $this->addComponent(new GridFieldDataColumns());
-        $this->addComponent(new GridFieldSiteTreeEditButton());
-        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
-        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
-        $this->addComponent(new GridFieldSiteTreeState());
+
+        $this->addComponent(GridFieldButtonRow::create('before'));
+        $this->addComponent(GridFieldSiteTreeAddNewButton::create('buttons-before-left'));
+        $this->addComponent(GridFieldToolbarHeader::create());
+        $this->addComponent(GridFieldSortableHeader::create());
+        $this->addComponent(GridFieldFilterHeader::create());
+        $this->addComponent(GridFieldDataColumns::create());
+        $this->addComponent(GridFieldSiteTreeEditButton::create());
+        $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
+        $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
+        $this->addComponent(GridFieldSiteTreeState::create());
 
         $pagination->setThrowExceptionOnBadDataType(true);
     }

@@ -1,10 +1,21 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 class LumberjackTest extends SapphireTest
 {
-
+    /**
+     * {@inheritDoc}
+     * @var string
+     */
     protected static $fixture_file = 'fixtures.yml';
 
+    /**
+     * @var array
+     */
     protected $extraDataObjects = array(
         'SiteTree_Lumberjack',
         'SiteTree_LumberjackHidden',
@@ -19,22 +30,24 @@ class LumberjackTest extends SapphireTest
         $excluded = $this->filteredClassNames($excluded, $this->extraDataObjects);
         $this->assertEquals($excluded, array('SiteTree_LumberjackHidden' => 'SiteTree_LumberjackHidden'));
 
-        Config::inst()->update('SiteTree', 'show_in_sitetree', false);
+        Config::inst()->update('SilverStripe\\CMS\\Model\\SiteTree', 'show_in_sitetree', false);
         $excluded = $standard->getExcludedSiteTreeClassNames();
         $excluded = $this->filteredClassNames($excluded, $this->extraDataObjects);
-        $this->assertEquals($excluded, array(
-            'SiteTree_Lumberjack' => 'SiteTree_Lumberjack',
-            'SiteTree_LumberjackHidden' => 'SiteTree_LumberjackHidden'
-        ));
+        $this->assertEquals(
+            $excluded,
+            array(
+                'SiteTree_Lumberjack'       => 'SiteTree_Lumberjack',
+                'SiteTree_LumberjackHidden' => 'SiteTree_LumberjackHidden'
+            )
+        );
     }
-
 
     /**
      * Because we don't know what other test classes are included, we filter to the ones we know
      * and want to test.
      *
-     * @param array $classNames
-     *
+     * @param  array $classNames
+     * @param  array $explicitClassNames
      * @return array
      */
     protected function filteredClassNames($classNames, $explicitClassNames)
@@ -48,20 +61,15 @@ class LumberjackTest extends SapphireTest
 
 class SiteTree_Lumberjack extends SiteTree implements TestOnly
 {
-
-    private static $extensions = array(
-        'Lumberjack',
-    );
+    private static $extensions = ['\\SilverStripe\\Lumberjack\\Model\\Lumberjack'];
 }
 
 class SiteTree_LumberjackHidden extends SiteTree_Lumberjack implements TestOnly
 {
-
     private static $show_in_sitetree = false;
 }
 
 class SiteTree_LumberjackShown extends SiteTree_LumberjackHidden implements TestOnly
 {
-
     private static $show_in_sitetree = true;
 }
