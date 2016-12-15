@@ -31,16 +31,16 @@ class GridFieldConfig_Lumberjack extends GridFieldConfig
     {
         parent::__construct($itemsPerPage);
 
-        $this->addComponent(GridFieldButtonRow::create('before'));
-        $this->addComponent(GridFieldSiteTreeAddNewButton::create('buttons-before-left'));
-        $this->addComponent(GridFieldToolbarHeader::create());
-        $this->addComponent(GridFieldSortableHeader::create());
-        $this->addComponent(GridFieldFilterHeader::create());
-        $this->addComponent(GridFieldDataColumns::create());
-        $this->addComponent(GridFieldSiteTreeEditButton::create());
-        $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
-        $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
-        $this->addComponent(GridFieldSiteTreeState::create());
+        $this->addComponent(new GridFieldButtonRow('before'));
+        $this->addComponent(new GridFieldSiteTreeAddNewButton('buttons-before-left'));
+        $this->addComponent(new GridFieldToolbarHeader());
+        $this->addComponent(new GridFieldSortableHeader());
+        $this->addComponent(new GridFieldFilterHeader());
+        $this->addComponent(new GridFieldDataColumns());
+        $this->addComponent(new GridFieldSiteTreeEditButton());
+        $this->addComponent(new GridFieldPageCount('toolbar-header-right'));
+        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
+        $this->addComponent(new GridFieldSiteTreeState());
 
         $pagination->setThrowExceptionOnBadDataType(true);
     }

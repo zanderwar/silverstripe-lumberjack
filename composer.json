@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "SilverStripe\\Lumberjack\\": "code/"
+            "SilverStripe\\Lumberjack\\": "src/"
         }
     },
     "license": "BSD-2-Clause",

@@ -32,6 +32,8 @@ In this example we have a `NewsHolder` page which is the root of our news sectio
 ```php
 <?php
 
+use Page;
+
 class NewsHolder extends Page
 {
     private static $extensions = ['\\SilverStripe\\Lumberjack\\Model\\Lumberjack'];

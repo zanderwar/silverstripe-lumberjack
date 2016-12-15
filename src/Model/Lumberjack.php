@@ -77,7 +77,7 @@ class Lumberjack extends SiteTreeExtension
         $staged = $baseClass::get()
             ->filter('ParentID', (int)$this->owner->ID)
             ->exclude('ID', (int)$this->owner->ID);
-        if (!$showAll && $this->owner->db('ShowInMenus')) {
+        if (!$showAll && $this->owner->dbObject('ShowInMenus')) {
             $staged = $staged->filter('ShowInMenus', 1);
         }
         $this->owner->extend('augmentStageChildren', $staged, $showAll);
