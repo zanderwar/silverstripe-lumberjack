@@ -1,3 +1,3 @@
 <?php
 
-define('LUMBERJACK_DIR', dirname(__FILE__));
+define('LUMBERJACK_DIR', basename(dirname(__FILE__)));
