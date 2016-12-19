@@ -36,7 +36,7 @@ use Page;
 
 class NewsHolder extends Page
 {
-    private static $extensions = ['\\SilverStripe\\Lumberjack\\Model\\Lumberjack'];
+    private static $extensions = ['SilverStripe\\Lumberjack\\Model\\Lumberjack'];
 
     private static $allowed_children = [
         'NewsArticle',
@@ -62,10 +62,10 @@ the `SiteTree` or `Page` class.
 
 
 ```yaml
-SilverStripe\Blog\Model\BlogHolder:
+SilverStripe\Blog\Model\Blog:
   extensions:
     - SilverStripe\Lumberjack\Model\Lumberjack
 
-SilverStripe\Blog\Model\BlogEntry:
+SilverStripe\Blog\Model\BlogPost:
   show_in_sitetree: false
 ```
