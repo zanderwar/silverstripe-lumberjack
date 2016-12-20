@@ -20,6 +20,8 @@
         }
     },
     "license": "BSD-2-Clause",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Michael Strong",
