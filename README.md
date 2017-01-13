@@ -11,12 +11,13 @@ This module was born out of and decoupled from [micmania1/silverstripe-blog](htt
 
 ## Requirements
 
-	silverstripe/cms: 3.1+
-
+* silverstripe/cms: 4.0+
 
 ## Installation
 
-	composer require silverstripe/lumberjack
+```bash
+composer require silverstripe/lumberjack
+```
 
 ## Features
 
@@ -25,50 +26,46 @@ This module was born out of and decoupled from [micmania1/silverstripe-blog](htt
 
 ## Usage
 
-In this example we have a `NewsHolder` page which is the root of our news section, containing `NewsArticle`s and 
+In this example we have a `NewsHolder` page which is the root of our news section, containing `NewsArticle`s and
 `NewsPage`s. We want to display `NewsPage` in the site tree but we want to display `NewsArticle`s in a `GridField`.
 
-	<?php
-	
-	class NewsHolder extends Page {
-		private static $extensions = array(
-			'Lumberjack',
-		);
-		
-		private static $allowed_children = array(
-			'NewsArticle',
-			'NewsPage',
-		);
-	}
-	
-	class NewsArticle extends Page {
-		
-		private static $show_in_sitetree = false;
-		
-		private static $allowed_children = array();
-		
-	}
-	
-	class NewsPage extends Page {
-		
-		private static $show_in_sitetree = true;
-	
-	}
-	
+```php
+<?php
+
+use Page;
+
+class NewsHolder extends Page
+{
+    private static $extensions = ['SilverStripe\\Lumberjack\\Model\\Lumberjack'];
+
+    private static $allowed_children = [
+        'NewsArticle',
+        'NewsPage',
+    ];
+}
+
+class NewsArticle extends Page
+{
+    private static $show_in_sitetree = false;
+    private static $allowed_children = [];
+}
+
+class NewsPage extends Page
+{
+    private static $show_in_sitetree = true;
+}
+```
+
 If `show_in_sitetree` is not explicitly defined on a class, then it will default to true. You can add this setting to
-core classes and modules using the YAML config system. It is **not** recommended to add the LumberJack extension to 
+core classes and modules using the YAML config system. It is **not** recommended to add the LumberJack extension to
 the `SiteTree` or `Page` class.
 
 
-	:::yaml
-	
-	BlogHolder:
-	  extensions:
-	    - 'Lumberjack'
-	
-	BlogEntry:
-	  show_in_sitetree: false
-	
+```yaml
+SilverStripe\Blog\Model\Blog:
+  extensions:
+    - SilverStripe\Lumberjack\Model\Lumberjack
 
-
-
+SilverStripe\Blog\Model\BlogPost:
+  show_in_sitetree: false
+```

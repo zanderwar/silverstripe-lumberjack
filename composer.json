@@ -1,24 +1,31 @@
 {
-	"name": "silverstripe/lumberjack",
-	"description": "A module to make managing pages in a GridField easy without losing any of the functionality that you're used to in the CMS.",
-	"type": "silverstripe-module",
-	"require": {
-		"silverstripe/framework": "^3.1",
-		"silverstripe/cms": "^3.1"
-	},
-	"require-dev": {
-		"phpunit/PHPUnit": "~3.7@stable"
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.x-dev"
-		}
-	},
-	"license": "BSD-2-Clause",
-	"authors": [
-		{
-			"name": "Michael Strong",
-			"email": "mstrong@silverstripe.org"
-		}
-	]
+    "name": "silverstripe/lumberjack",
+    "description": "A module to make managing pages in a GridField easy without losing any of the functionality that you're used to in the CMS.",
+    "type": "silverstripe-module",
+    "require": {
+        "silverstripe/framework": "^4.0",
+        "silverstripe/cms": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/PHPUnit": "~4.8"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "SilverStripe\\Lumberjack\\": "src/"
+        }
+    },
+    "license": "BSD-2-Clause",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Michael Strong",
+            "email": "mstrong@silverstripe.org"
+        }
+    ]
 }
