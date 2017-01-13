@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Lumberjack\Forms;
 
+use SilverStripe\CMS\Controllers\CMSPageAddController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -10,6 +11,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldComponent;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\HiddenField;
@@ -27,7 +29,9 @@ use SilverStripe\View\Requirements;
  *
  * @author Michael Strong <mstrong@silverstripe.org>
  */
-class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements GridField_ActionProvider
+class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements
+    GridField_ActionProvider,
+    GridFieldComponent
 {
     /**
      * Determine the list of classnames and titles allowed for a given parent object
@@ -105,21 +109,17 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements Gri
         $addAction = GridField_FormAction::create($gridField, 'add', $this->buttonName, 'add', 'add');
         $addAction
             ->setAttribute('data-icon', 'add')
-            ->addExtraClass("no-ajax ss-ui-action-constructive dropdown-action");
+            ->addExtraClass('no-ajax btn btn-primary font-icon-plus');
 
         $forTemplate = ArrayData::create([]);
         $forTemplate->Fields = ArrayList::create();
         $forTemplate->Fields->push($pageTypes);
         $forTemplate->Fields->push($addAction);
 
-        Requirements::css(LUMBERJACK_DIR . "/css/lumberjack.css");
-        Requirements::javascript(LUMBERJACK_DIR . "/javascript/GridField.js");
+        Requirements::css(LUMBERJACK_DIR . '/css/lumberjack.css');
+        Requirements::javascript(LUMBERJACK_DIR . '/javascript/GridField.js');
 
-        return array(
-            $this->targetFragment => $forTemplate->renderWith(
-                'SilverStripe\\Lumberjack\\Forms\\GridFieldSiteTreeAddNewButton'
-            )
-        );
+        return [$this->targetFragment => $forTemplate->renderWith(__CLASS__)];
     }
 
     /**
@@ -145,14 +145,15 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements Gri
     {
         if ($actionName == 'add') {
             $tmpData = json_decode($data['ChildPages']['GridState'], true);
-            $tmpData = $tmpData['SilverStripe\\Lumberjack\\Forms\\GridFieldSiteTreeAddNewButton'];
+            /** @skipUpgrade  */
+            $tmpData = $tmpData['GridFieldSiteTreeAddNewButton'];
 
             $data = array(
                 'ParentID' => $tmpData['currentPageID'],
                 'PageType' => $tmpData['pageType']
             );
 
-            $controller = Injector::inst()->create('CMSPageAddController');
+            $controller = Injector::inst()->create(CMSPageAddController::class);
 
             $form = $controller->AddForm();
             $form->loadDataFrom($data);
@@ -163,7 +164,7 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements Gri
             // Get the current record
             $record = SiteTree::get()->byId($controller->currentPageID());
             if ($record) {
-                $response->redirect(Director::absoluteBaseURL() . $record->CMSEditLink(), 301);
+                $response->redirect($record->CMSEditLink(), 301);
             }
             return $response;
         }
