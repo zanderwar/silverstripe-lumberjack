@@ -101,7 +101,7 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements
                     'GridFieldSiteTreeAddNewButton.Add',
                     'Add new {name}',
                     'Add button text for a single option.',
-                    array($children[$keys[0]])
+                    ['name' => $children[$keys[0]]]
                 );
             }
         }
