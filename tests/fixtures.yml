@@ -1,4 +1,4 @@
-SiteTree_Lumberjack:
+SilverStripe\Lumberjack\Tests\LumberjackTest:
   standard:
     URLSegment: 'standard'
     Title: 'Standard'
