@@ -28,11 +28,11 @@ class LumberjackTest extends SapphireTest
     public function testGetExcludedSiteTreeClassNames()
     {
         /** @var Lumberjack $standard */
-        $standard = $this->objFromFixture(self::class, 'standard');
+        $standard = $this->objFromFixture('SilverStripe\Lumberjack\Tests\LumberjackTest', 'standard');
 
         $excluded = $standard->getExcludedSiteTreeClassNames();
         $excluded = $this->filteredClassNames($excluded, $this->extraDataObjects);
-        $this->assertEquals($excluded, array('SiteTree_LumberjackHidden' => 'SiteTree_LumberjackHidden'));
+        $this->assertEquals($excluded, array(SiteTree_LumberjackHidden::class => SiteTree_LumberjackHidden::class));
 
         Config::modify()->set('SiteTree', 'show_in_sitetree', false);
 
