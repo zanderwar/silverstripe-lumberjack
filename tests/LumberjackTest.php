@@ -75,7 +75,7 @@ class LumberjackTest extends SapphireTest
 class SiteTree_Lumberjack extends SiteTree implements TestOnly
 {
     private static $extensions = array(
-        'Lumberjack',
+        Lumberjack::class,
     );
 }
 
